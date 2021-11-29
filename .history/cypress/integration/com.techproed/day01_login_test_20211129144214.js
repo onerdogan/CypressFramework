@@ -7,18 +7,7 @@ describe('concort hotel',()=>{
 
         //2.yol
         cy.contains('Log in').click()//contains()elementi text olarak bulur
-
-        //username; manager
-        cy.get('#UserName').type('manager')
-
-        //password;Manager2!
-        cy.get('#Password').type('Manager1!')
-
-        //login click
-        cy.get('#btnSubmit').click()
-
-        
-
+n
     })
    
 

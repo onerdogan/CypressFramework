@@ -17,8 +17,6 @@ describe('concort hotel',()=>{
         //login click
         cy.get('#btnSubmit').click()
 
-        
-
     })
    
 

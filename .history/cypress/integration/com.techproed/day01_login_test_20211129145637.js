@@ -17,7 +17,7 @@ describe('concort hotel',()=>{
         //login click
         cy.get('#btnSubmit').click()
 
-        
+        //a[@id='nav-hamburger-menu']/span[@class='hm-icon-label']
 
     })
    

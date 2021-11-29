@@ -13,11 +13,8 @@ describe('concort hotel',()=>{
 
         //password;Manager2!
         cy.get('#Password').type('Manager1!')
-
-        //login click
-        cy.get('#btnSubmit').click()
-
         
+        cy.get('#btnSubmit').click()
 
     })
    
