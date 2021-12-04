@@ -1,0 +1,2 @@
+
+describe('drag and drop')
