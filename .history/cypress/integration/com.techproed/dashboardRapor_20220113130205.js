@@ -1,0 +1,1 @@
+//C:\Users\Öner\Desktop\my-cypress-framework\cypress\integration\com.techproed\day01_login_test.js

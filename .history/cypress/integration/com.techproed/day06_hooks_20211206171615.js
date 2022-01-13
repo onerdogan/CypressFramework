@@ -1,0 +1,33 @@
+describe('hooks',()=>{
+    before(()=>{
+        console.log('before method')
+    })
+
+    beforeEach(()=>{
+        console.log('beforeEach method')
+        cy.visit('https://qa-environment.concorthotel.com/')
+
+    })
+
+    after(()=>{
+        console.log('after methot')
+    })
+
+    afterEach(()=>{
+        console.log('afterEach method')
+        cy.url().should('include','/Account/Logon')
+    })
+
+    it('test 1',()=>{
+        cy
+
+    })
+    it('test 1',()=>{
+
+        
+    })
+    it('test 1',()=>{
+
+        
+    })
+})

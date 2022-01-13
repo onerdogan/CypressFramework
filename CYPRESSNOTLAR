@@ -1,0 +1,1824 @@
+CYPRESS
+=======
+
+Cypress, modern web dünyası için tasarlanmış, JavaScript tabanlı,
+yeni jenerasyon bir test aracıdır. Hali hazırda var olan Mocha ve
+Chai gibi test araçlarının içinde barındırdığı birçok method ve
+özelliği bünyesinde barındırır. O yüzden daha önce bu test araçlarını
+kullandıysanız Cypress’e alışmak sizin için çok daha kolay olacaktır.
+
+Cypress başka hiçbir test aracının sahip olmadığı özelliklere sahiptir.
+Bunlar:
+
+Zamanda yolculuk: Cypress, testiniz çalışırken ekran görüntüsü alabilir.
+Bu sayede test süreci içindeki herhangi bir ana gidip kolayca nasıl
+göründüğünü görebilirsiniz.
+
+Debug edebilmek: Chrome Developer tools aracılığı ile kolayca
+testinizin nerede hata verdiğini görebilirsiniz.
+
+Otomatik bekleme: Testinize uygulamayı bekletme methodları yazmak
+zorunda değilsiniz. Cypress otomatik olarak emirlerin ve sorguların
+çalışmasını bekler ve yanıt aldıktan sonra ilerler.
+
+Taklit edebilme: Fonksiyonların davranışlarını kontrol edebilirsiniz.
+Server cevapları, saat bilgileri gibi dataları tıpkı gerçek bir
+kaynaktan gelmiş gibi taklit edebilirsiniz.
+
+Ağ trafiği kontrolü: Herhangi bir servera ihtiyaç duymadan istediğiniz
+miktarda ağ trafiğini taklit edebilirsiniz.
+
+Cypress çoğunlukla Selenium ile karşılaştırılır ancak hem temel ilke
+bakımından hem de mimari bakımından oldukça farklıdır.
+Selenium ve diğer araçların sahip olduğu birçok eksik noktaların
+üstesinden gelir. Cypress’in geliştiricisi Brian Mann, bu aracı
+geliştirirken anketler yoluyla test sürecinde karşılaşılan zorlukları
+ve talepleri tespit ederek ilerlemiştir.
+
+Cypress her seviyede otomasyon sürecini kontrol eder. Bunun anlamı,
+tarayıcının içinde ve dışında gelişen her olayı anlayabilme yeteneğine
+sahip olmasıdır. Bu sayede herhangi bir test aracından çok
+daha tutarlı sonuçlar verebilir.
+
+Cypress bilgisayarımıza lokal olarak kurulduğundan dolayı
+otomasyon süreci için işletim sistemine erişebilir. Bu sayede ekran
+görüntüleri alabilir, videolar kaydedebilir, bazı dosya işlemleri
+ve ağ operasyonları yapabiliriz. Uygulamanın içinde çalıştığından
+dolayı her nesneye native şekilde ulaşabiliriz. Bu özellikten dolayı
+test kodumuzun içinde window nesnesine, document nesnesine,
+DOM elementlerine, veya bir timer nesnesine ulaşabiliriz.
+
+=====================================================================
+
+DOSYA YAPISI
+============
+
+Fixture: Sabit test datalari olusturmak icin kullanilir.
+-url, email, username, password, ......
+-This is like creating static variables in Java
+---------------------------------------------------------------------------
+
+Integration: This folder used to create the test cases
+-similar to Java folder in Selenium
+-By default this folder has some test cases.
+-We can delete those test case and write our own
+-In this folder we can create own folder folders and test classes
+---------------------------------------------------------------------------
+
+Plugins: (index.js) Cypressin yapabidiklerinden yararlanmanıza,
+bunları değiştirmenize veya genişletmenize olanak tanır.
+
+Ornek Plagins: cypress-dark, cypress-xpath, cypress-mailosaur,
+               cypress-slack-reporter, ......
+
+https://www.npmjs.com/package/cypress-xpath
+npm install -D cypress-xpath
+require('cypress-xpath')
+---------------------------------------------------------------------------
+
+Support Folder:
+This is used to create custum methods, utilty classess, ....
+When we add any custom methods in support folder, they will be
+visible entire framawork automatically
+
+command.js: çeşitli özel komutların nasıl oluşturulacağını ve
+            mevcut komutların üzerine nasıl yazılacağını gösterir.
+
+---------------------------------------------------------------------------
+
+node_modules:
+-This hass all packages and required npm(node package manager)
+-This is smilar to maven dependencies/plugins
+---------------------------------------------------------------------------
+
+cypress.json: Bu JSON dosyası, sağladığınız tüm yapılandırma
+              değerlerini depolamak için kullanılır.
+
+-this is used to override cypress custum behaviours
+- adding global variables
+add tis in cypress.json file to override subdomain security
+Ornek: downloadsFolder, defaultCommandTimeout, screenshotsFolder, 
+
+"defaultCommandTimeout": 4000,
+
+"chromeWebSecurity": false
+
+
+Güvenli olmayan içeriği görüntüle
+Kaynaklar arası hatalar olmadan herhangi bir süper domain alanına gidin
+Uygulamanıza katıştırılmış çapraz kaynaklı iframelere erişin
+---------------------------------------------------------------------------
+
+package-lock.js:
+-after npm commands, this fill will be generated
+this is specific file based on the npm packages
+(project specific informations) like pom.xml
+-in our case, this package has all cypress specific information
+---------------------------------------------------------------------------
+
+package.json: 
+this file has basic general configration
+such as name, description, devDependencies
+
+============================================================================
+
+CYPRESS KURULUM
+===============
+1) my_cypress_framework isminde bir klasor olustur.
+
+2) VS Code'u ac.
+
+3) Olusturdugumuz klasoru VS Code programinin icine surukle ve bırak,
+   veya File -> Open Folder dan olusturdugunuz klasoru ac.
+
+4) Terminal -> New Terminal (Terminali ac)
+
+5) Terminalde -> npm init -y
+    frameworkte package.json dosyasi olustu.
+
+6) Cypress yuklemek icin terminalde
+    npm install --save-dev cypress
+    frameworkte node_modules ve package-lock.json dosyalari olustu.
+
+7) Terminalde Cypressi acmak icin
+    npx cypress open
+    frameworkte cypress klasoru olustu.
+
+============================================================================
+
+
+KOD 1: day01_first_test.js
+
+describe('My First Test', () =>{
+// describe ('fonksiyonun ismi', 'test icin olusturulacak diger fonksiyon')
+
+    it('Url Test', ()=>{
+    //test'i tanimliyoruz. @Test anataion gibi
+    //it('testin ismi', 'olusturulacak fonksiyon')
+
+    //URL adresinde google va rmi?
+    cy.visit('https://www.google.com/')
+
+    cy.url().should('include', 'google')
+    //url() url testi ici kullanilir.
+    //should('iceriyormu', 'xxxxxx')
+    })
+
+    //2. test olusturma
+    it('Title Test', ()=>{
+
+        //Title da Google var mi?
+        cy.visit('https://www.google.com/')
+        cy.title().should('eq', 'Google')
+    })
+})
+============================================================================
+
+
+KOD 2: day01_login_test.js
+
+describe('Crystal Key Hotel', ()=>{
+
+    it('Test 1', ()=> {
+
+    cy.visit('https://qa-environment.koalaresorthotels.com/')
+
+    //seleniumdaki get()
+
+    //login
+    //1.yol
+    //cy.get('#navLogon > .nav-link').click()
+
+    //2.yol
+    cy.contains('Log in').click()
+
+    //contains() metni text olarak buluyor
+    //userername: 'manager'
+    cy.get('#UserName').type('Manager')
+
+    //driver.findElement(BycssLocator('#UserNam')).sendKeys('Manager')
+
+    //password: 'Manager2!'
+    cy.get('#Password').type('Manager1!')
+
+    cy.get('#btnSubmit').click()   
+    })
+})
+============================================================================
+
+
+
+KOD 3: day02_crystal_key.js
+
+describe('Koala Resort Hotel', ()=>{
+
+    it('Test Case1', ()=>{
+        cy.visit('https://qa-environment.koalaresorthotels.com/')
+
+        cy.contains('Log in').click()
+
+        //ASSERT
+
+        //1) cy.url().should('include'
+        cy.url().should('include', 'Account/Logon')
+        //url 'Account/Logon' iceriyor mu
+
+        //2) have.text
+        cy.get('#navLogon > .nav-link').should('have.text', 'Log in')
+        //locate edilen yerdeki metinde 'Log in' yaziyor mu
+        
+        //3) be.visible
+        cy.get('.row > .mb-4').should('be.visible')
+        //locate edilen yerde metin var mi veya gorunur mu
+
+        //4) should('eq'
+        cy.title().should('eq', 'KoalaResortHotels - Log in')
+        // title buna esit mi ->'KoalaResortHotels - Log in'
+
+        // 5) should('include.text' 
+        cy.get('.row > .mb-4').should('include.text', 'Log in')
+        // locate edilen yerde 'Log in' text olarak var mi
+        //burada include ve have ayni sonucu verir.
+    })
+})
+============================================================================
+
+
+
+KOD 4: day02_dropdown.js
+
+describe('dropdown', ()=>{
+    it('dropdown test', ()=>{
+        cy.visit("https://the-internet.herokuapp.com/dropdown")
+
+        //option 2 sec
+        cy
+        .get('#dropdown')
+        .select('Option 1').should('have.value', '1')
+
+        cy.wait(3000)
+        //option 2 sec
+        cy
+        .get('#dropdown')
+        .select('Option 2')
+        .should('have.value', '2')
+    })
+})
+============================================================================
+
+
+
+KOD 5: login_test.js
+
+describe('Login', ()=>{
+
+    //negatif test icin fake email ve password
+    //const eMail = "qwert@gmail.com"
+    //const pass = "qwert"
+
+    const eMail = "cypress_test_1@gmail.com"
+    const pass = "admin_123"
+
+    it.skip('login negatif', ()=>{
+        cy.visit("https://test.iyikisordun.com/login.php")
+        cy.get('[type="email"]').type(eMail)
+        cy.get('[type="password"]').type(pass)
+        cy.get('.btn').click()
+        cy.get("#fail").should('include.text', 'Girdiğiniz bilgiler hatalıdır.')
+        //#fail -> fail bekledigimiz durumlarda kullanabiliriz
+    })
+    
+    it('login pozitif', ()=>{
+        cy.visit("https://test.iyikisordun.com/login.php")
+        cy.get('[type="email"]').type(eMail)
+        cy.get('[type="password"]').type(pass)
+        cy.get('.btn').click()
+
+        cy.get('.m-0').should('have.text', 'Dashboard')
+        cy.url().should('include', 'index.php')
+    })
+})
+============================================================================
+
+
+
+KOD 6: day03_hover_over.js
+
+describe('hover over', () => {
+
+    it.skip('move over', () => {
+        cy.visit('https://www.amazon.com/')
+        cy.get('.icp-nav-link-inner > .nav-line-2 > .nav-icon').trigger('mouseover')
+        //triggeer() -> mouse'u hareket ettirir
+
+        // change country/region
+        cy.contains('Change country/region').click()
+
+        //select Canada
+
+        //cy.get('.a-dropdown-prompt').select('Canada')
+        /*
+        <span class="a-dropdown-prompt">United States</span>
+        yukaridaki locater bu tag icerinde geciyor.
+        Ancak cy.select() kodu kullanirken locaterlarin <span></span>
+        icerinde olmamasi lazim.
+        */
+
+        cy.get('#icp-selected-country').select('Canada', {force: true})
+        // {force: true} -> dropdown ellemetleri acmak ici kullaniyoruz.
+    })
+})
+============================================================================
+
+
+
+KOD 7: day03_scroll.js
+
+describe('scroll', () => {
+
+    it('scroll into view', () => {
+        cy.visit(('https://qa-environment.koalaresorthotels.com'))
+
+        cy.get('.col-md-7 > .mb-4').scrollIntoView()
+        cy.wait(3000)
+        // scrollIntoView()-> locate edilen yere gider
+
+        cy.get(':nth-child(9) > .container > .justify-content-center > .col-md-7 > h2').scrollIntoView()
+        cy.wait(3000)
+
+        cy.get('.col-md-7 > h2 > span').scrollIntoView()
+
+        cy.scrollTo('bottom')
+        //en asagiya git
+        cy.wait(3000)
+
+        cy.scrollTo('top')
+        // en yukariya git
+        cy.wait(3000)
+
+        cy.scrollTo(0, 1000)    //1000px down
+        cy.wait(3000)
+
+        cy.scrollTo(0, -500)    //500px up
+    })
+})
+============================================================================
+
+
+
+KOD 8: day03_checkboxes.js
+  
+describe('checkboxes', () => {
+
+    it.skip('checking single box', () => {
+        //it.skip --> testi run etmez
+        //it.only --> sadece o testi calistirir
+
+
+        cy.visit('http://automationpractice.com/index.php')
+        cy.get('.sf-with-ul').first().click()
+
+        //tikli olmadigini test et
+        cy.get('#layered_category_4').should('not.be.checked')
+        //should('not.be.checked') -> element tikli degilse true return
+        //isaretlenmedigini test eder
+
+        //tikla
+        cy.get('#layered_category_4').check()
+
+        ////tikli oldugunu test et
+        cy.get('#layered_category_4').should('be.checked')
+        //should('be.checked') -> tikli ise true return eder
+
+        //tiklamayi kaldirir
+        cy.get('#layered_category_4').uncheck().should('not.be.checked')
+        //uncheck() -> tiklamyi kaldirir.
+        })
+
+    it.skip('check all checkboxes', () => {
+        cy.visit('http://automationpractice.com/index.php')
+        cy.get('.sf-with-ul').first().click()
+
+        //butun kutulara tikla
+        cy.get("input[type='checkbox']").check()
+        cy.wait(3000)
+
+        //tiklamalari kaldir
+        cy.get("input[type='checkbox']").uncheck()
+    })
+
+    it('click', () => {
+        cy.visit('http://automationpractice.com/index.php')
+        cy.get('.sf-with-ul').first().click()
+
+        cy.get("input[type='checkbox']").click({ multiple: true })
+
+        //click({ multiple: true }) -> click() tek elemente uygulanır.
+        //birden fazla elemente uygulmak icin { multiple: true } kullanilir.
+
+        //Assert
+        //1)
+        cy.get("input[type='checkbox']").first().should('be.checked')
+
+        //2) 
+
+        cy.get("input[type='checkbox']").first().parent().should('have.class', 'checked')
+
+        //3)should('have.id', 'username')
+        //4)should('have.type', 'text')
+        //should('have.class', 'container')
+    })
+})
+============================================================================
+
+
+
+KOD 9: day04_allerts.js
+
+describe('allerts', ()=>{
+
+    it('alert test', ()=>{
+
+        //Cypress otomatik olarak allert button tiklamalarini onaylar.
+        cy.visit('https://the-internet.herokuapp.com/javascript_alerts')
+        cy.get(':nth-child(1) > button').click()
+        cy.get('#result').should('have.text','You successfully clicked an alert')
+    })
+
+    it('accept alert Test', ()=> {
+        cy.visit('https://the-internet.herokuapp.com/javascript_alerts')
+        //2. buttona tikliyoruz (Click for JS Confirm)
+        //2 secenek cikiyor. iptal ve tamam
+        //cypress otomatik olarak tamam'i kabul ediyor
+        cy.get(':nth-child(2) > button').click()
+        cy.get('#result').should('have.text','You clicked: Ok')
+    })
+
+    it('dismiss alert', ()=> {
+        cy.visit('https://the-internet.herokuapp.com/javascript_alerts')
+        cy.get(':nth-child(2) > button').click()
+
+        //cypres otomatik olarak tamam butonuna tikladi
+        //ama iptal butonunu secmek istiyoruz
+        //browser controlu icin on() funksiyonu kullanacagiz
+        //on()-> jquery bir fonksiyondur
+
+        //window(object):confirm(functionality)
+        cy.on('window:confirm', (str)=>{
+            return false
+            //return true -> default olarak tamam tikla demek
+        })
+        cy.get('#result').should('have.text','You clicked: Cancel')
+    })
+
+    it('entering text on the allert', () => {
+
+        //3. buttom'a tikla (Click for JS Promt)
+        //'Hi' yaz. Ok'e tikla
+        cy.visit('https://the-internet.herokuapp.com/javascript_alerts')
+
+        cy.window()//pop up pencereleri kontrol ediyoruz
+        .then(($windowElement) => {
+            //$windowElement -> promt'a bilgi girisi
+            cy.stub($windowElement, 'prompt').returns('Hi')
+            cy.wait(4000)
+            cy.get(':nth-child(3) > button').click()
+            
+        })
+            cy.get('#result').should('have.text','You entered: Hi')
+    })
+})
+============================================================================
+
+
+
+KOD 10: day04_iframe.js
+
+import 'cypress-iframe'
+
+//cypress runner'in iframe ile iletisime gecmesi icin
+//gerekli olan kodlari tanimlar
+
+describe('iframes',()=>{
+    it('iframe',()=>{
+        cy.visit('https://the-internet.herokuapp.com/iframe')
+        cy.get('h3').should('contain', 'Editor')
+
+        cy.frameLoaded('#mce_0_ifr')
+        //diver.switchto.frame('.mce_0_ifr') ->Selenium
+        //frameLoaded('locator') iframe'in yerini tanimliyoruz
+        //iframe'i yukle
+
+        cy.iframe().find('p').clear()
+        //iframe git
+        //find('p') p tag'ini bul
+        //clear
+
+        cy.iframe().find('p').type('Hello World')
+
+        cy.get('.large-4 > div > a').should('contain.text', 'Elemental Selenium')
+
+        cy.get('.large-4 > div > a').should('contain.text', 'Elemental Selenium').click()
+    })
+})
+============================================================================
+
+
+
+KOD 11: day04_multiple_windows.js
+
+describe('multiple windows', () => {
+    it('removing target', ()=>{
+
+        cy.visit('https://the-internet.herokuapp.com/windows')
+
+        cy.wait(3000)
+
+        cy.get('.example > a').invoke('removeAttr','target').click()
+        //invoke('removeAttr', 'Atribute Name')
+        // attribute siliyor.
+        //yeni sekme acmiyor. tiklandiginda ayni sekmede aciyor
+
+        cy.get('h3').should('have.text', 'New Window')
+    })
+
+    it('yeni urlde acma',()=>{
+        cy.visit('https://the-internet.herokuapp.com/windows')
+
+        cy.wait(3000)
+
+        // prop() ile 'href' degerini aldik
+        // prop()-> jquery, attribute degerini alan bir method
+
+        cy
+        .get('.example > a')
+        .then((element) =>{
+        const newURL = element.prop('href')
+        
+        cy.visit(newURL)
+        })
+        cy.get('h3').should('have.text', 'New Window')
+    })
+})
+============================================================================
+
+
+
+KOD 12: day04_draganddrop.js
+
+import '@4tw/cypress-drag-drop'
+
+///<reference types = 'Cypress'/>
+
+describe('drag and drop', ()=>{
+    it.skip('double click', ()=>{
+        cy.visit('https://www.testandquiz.com/selenium/testing.html')
+        cy.get('#dblClkBtn').dblclick()//cift tiklama
+        //sag tiklama rightclick()
+
+        cy.on('window:alert', (str)=>{
+            //Assert
+            //1)
+            expect(str).to.equal('hi, JavaTpoint Testing')
+            //2)
+            expect(str).to.eq('hi, JavaTpoint Testing')
+            //3)
+            expect(str).to.contains('hi, JavaTpoint Testing')
+        })
+    })
+
+    it('drag and drop', ()=>{
+        // 1) Terminalden: npm install --save-dev @4tw/cypress-drag-drop
+        // 2) import '@4tw/cypress-drag-drop'
+        cy.visit('https://www.testandquiz.com/selenium/testing.html')
+
+        cy.get('#sourceImage')//suruklenecek element
+        .drag('#targetDiv')//suruklenecegi yer
+    })
+})
+============================================================================
+
+
+
+KOD 13 Support --> commands.js
+
+// Cypress.Commands.add -> komut ekle, tanimla
+//automationpractice.com -> giris icin tanimlandi
+Cypress.Commands.add('login', (email, password) =>{
+    cy.visit("http://automationpractice.com/index.php")
+    cy.get('.login').click()
+    cy.get('#email').type(email)
+    cy.get('#passwd').type(password)
+    cy.get('#SubmitLogin > span').click()
+})
+============================================================================
+
+
+
+KOD 14: day05_custom_method.js
+
+describe('custom method', () => {
+
+    it('login', () => {
+        cy.login('123murat123@gmail.com', '123murat123')
+        //login -> commands.js de tanimlanan method
+        //commands.js'de tanimlandigi icin framework'ten ulasabiliyoruz
+    })
+
+    it('negative log in', () => {
+        cy.login('123murat12@gmail.com', '123murat123')
+        cy.contains('Authentication failed').should('be.visible')
+        cy.url().should('include', 'controller=authentication')
+        cy.screenshot()
+    })
+============================================================================
+
+
+
+KOD 15 Support --> commands.js
+
+//Amazon arama: girilen urun icin arama yapacak
+Cypress.Commands.add('amazonSearch',(productName)=>{
+    cy.visit('https://www.amazon.com/')
+    cy.get('#twotabsearchtextbox').type(productName)
+    cy.get('#nav-search-submit-button').click()
+})
+============================================================================
+
+
+
+KOD 16: day05_amazon_search.js
+
+describe('search', () => {
+
+    it('amazon search', () => {
+        //cy.amazonSearch('imac')
+        cy.amazonSearch('iphone')
+
+        //cy.get('.a-section > .a-color-state').should('have.text', '"imac"' )
+        cy.get('.a-section > .a-color-state').should('include.text','iphone')
+    })
+})
+
+================================================================================
+
+DOSYA YUKLEME
+
+cypress-file-upload
+
+1) https://www.npmjs.com/package/cypress-file-upload adresine git
+
+    npm install --save-dev cypress-file-upload
+
+    komutunu terminalde calistir.
+
+2) support -> commands.js -> dosyasina bu kodu ekle
+    import 'cypress-file-upload'
+
+3) fixture dosyasina resim ekle
+    image01.jpeg, image02.jpeg, image03.jpeg
+
+4) day05_file_upload.js dosyasini olustur
+
+
+
+   
+KOD 17
+
+ddescribe('file upload', () => {
+
+    it.skip('tek dosya yukleme', () => {
+        cy.visit('https://davidwalsh.name/demo/multiple-file-upload.php')
+        cy.wait(4000)
+        //cy.get('#filesToUpload').attachFile('image01.jpeg')
+        //veya
+
+        const path1 = 'image01.jpeg'
+        cy.get('#filesToUpload').attachFile(path1)
+        cy.get('#fileList > li').should('include.text','image01.jpeg')
+        cy.contains("image01.jpeg").should('be.visible')
+    })
+
+    it.skip('coklu dosya yukleme', () => {
+        cy.visit('https://davidwalsh.name/demo/multiple-file-upload.php')
+
+        const path1 = 'image01.jpeg'
+        const path2 = 'image02.jpeg'
+        const path3 = 'image03.jpeg'
+
+        cy.get('#filesToUpload')
+        .attachFile(path1).wait(3000)
+        .attachFile(path2).wait(3000)
+        .attachFile(path3).wait(3000)   
+    })
+
+    it.skip('coklu dosya yukleme', () => {
+        cy.visit('https://davidwalsh.name/demo/multiple-file-upload.php')
+        
+        //cy.get('#filesToUpload')
+        //.attachFile(['image01.jpeg', 'image02.jpeg', 'image03.jpeg'])
+
+        const path1 = 'image01.jpeg'
+        const path2 = 'image02.jpeg'
+        const path3 = 'image03.jpeg'
+
+        cy.get("#filesToUpload").
+        attachFile([path1, path2, path3])
+    })
+
+    it('override file name', () => {
+        cy.visit('https://davidwalsh.name/demo/multiple-file-upload.php')
+        const path1 = 'image01.jpeg'
+        
+        cy.get('#filesToUpload')
+        .attachFile({filePath: path1, fileName: 'image.jpeg'})
+
+        cy.contains("image.jpeg").should("be.visible")
+
+        cy.get('#fileList > li').contains('image.jpeg').should('be.visible')
+    })
+})
+============================================================================
+
+
+
+//ViewPorts
+
+
+KOD 18
+
+describe('Viewports',()=>{
+
+    it('view with iphone 6',()=>{
+        cy.visit('www.amazon.com')
+        cy.viewport('iphone-6')
+        //viewport: farkli ekran boyutlarinda uygulamayi
+        //test etmek icin kullanilir. mac, ipad, iphone, samsung
+        // https://docs.cypress.io/api/commands/viewport#Syntax
+        cy.screenshot();
+    })
+    
+    it('view with macbook 16',()=>{
+        cy.visit('www.amazon.com')
+        cy.viewport('macbook-16')
+        cy.screenshot();
+    })
+    
+    it.only('view with certain pixals',()=>{
+        cy.visit('www.amazon.com')
+        cy.viewport(2000,1000)
+        cy.screenshot();
+    })
+})
+============================================================================
+
+
+CYPRESS TESTLERi COMMAND VE TERMINALDEN CALISSTIRMA
+
+1. Cypress testlerini cypress runnerdan calistirabiliriz.
+
+2. Cypress testleri TERMINAL den calistirabiliriz
+https://docs.cypress.io/guides/guides/command-line#cypress-run
+Default olarak cypress, electron headless ile calisir.
+
+---------STEPS RUNNING FROM THE TERMINAL------
+1. Proje dosyasinda oldugunuzdan emin olun:
+    techproeds-iMac:my-cypress-framework techproed$
+
+2. ./node_modules/.bin/cypress run
+*** Butun testleri browsersiz run eder
+
+****************************************
+*******    Eger Hata Alirsaniz *********
+1.Cypress dosyasini sil
+/Users/techproed/Library/Caches/Cypress/ 
+
+2. Tekrar yukle 
+Proje dosyadina git ve kodu calistir
+npm install --save-dev cypress
+****************************************
+
+*** Tek testi run etme
+./node_modules/.bin/cypress run --spec dosyanin path i
+
+
+Asagidaki komut day01_login_test.js dosyasini headless(browsersiz)
+olarak electron da run eder.
+
+./node_modules/.bin/cypress run --spec cypress/integration/com.techproed/day01_login_test.js
+
+
+Asagidaki komut day01_login_test.js dosyasini headed olarak
+electron browserda calistirir 
+
+./node_modules/.bin/cypress run --spec cypress/integration/com.techproed/day01_login_test.js --headed
+
+
+
+
+*** Test paketini run etme
+paket : com.techproed
+tests : Paketteki butun testler
+
+./node_modules/.bin/cypress run --spec cypress/integration/com.techproed/*.js */
+// * butun testler demek
+
+***run on chrome from TERMINAL
+./node_modules/.bin/cypress run --spec cypress/integration/com.techproed/day01_login_test.js --browser chrome
+./node_modules/.bin/cypress run --spec cypress/integration/com.techproed/day01_login_test.js --browser firefox
+
+
+*****MOCHA FRAMEWORK***
+https://mochajs.org/
+-Mocha node.js ve browserda calisan JavaScript test framework udur.
+-Cypress default olarak Mocha framework kullanir.
+-Mocha testleri seri olarak calisir ve yakaladigi istisnaları
+ dogru test senaryolariyla eslestirirken esnek ve dogru raporlamaya izin verir.
+-Bazi mocha komutlari
+
+
+https://docs.cypress.io/guides/core-concepts/writing-and-organizing-tests#Hooks
+
+describe    => test class olusturur
+it()        => single test case olusturur
+before()    => Tum testlerden once bir kere calisir. (beforeclass in testNG)
+beforeEach()=> Test blogundaki her testten once calisir. (beforemethod in testNG)
+after()     => Tum testlerden sonra bir kere calisir. (afterclass in testNG)
+afterEach() => Test blogundaki her testten sonra calisir. (aftermethod in testNG)
+it().skip() => testi calistirmadan gecer.
+it().only() => sadece o testi calistir.
+
+
+
+
+
+KOD 20
+
+describe('hooks', () => {
+
+    before(()=>{
+        console.log('BEFORE METHOD')
+    })
+
+    beforeEach(()=>{
+        console.log('BEFORE EACH METHOD')
+        cy.visit('https://qa-environment.koalaresorthotels.com/')
+    })
+
+    after(()=>{
+        console.log('AFTER METHOD')
+    })
+
+    afterEach(()=>{
+        console.log('AFTER EACH METHOD')
+        cy.url().should('include', '/Account/Logon')
+    })
+
+    it('test 1', () => {
+        cy.contains('Log in').click()
+    })
+})
+
+testi terminalden calistir
+
+./node_modules/.bin/cypress run --spec cypress/integration/com.techproed/day06_mocha_hooks.js --browser chrome
+
+
+******CYPRESS DASHBOARD******
+
+https://dashboard.cypress.io/login
+
+-GitHub veya gmail hesabinizla giris yapabilirsiniz.
+-Create a project -> Projet Name (my_first_cypress_project)
+-projectID yi cypress.json a ekle.
+
+Profe olusturdugunuzda size 2 dane id verecek
+1. "projectId": "xxxxxx"  -> cypress.json dosyasina ekle
+2. key :xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+ -> bunu projeyi run etmek icin kullanacagiz.
+
+
+{
+  "chromeWebSecurity": false,
+  "projectId": "8yzr4r"
+}
+
+-Run the tests using cypress dashboard key form the terminal 
+
+
+Projedeki testleri calistirip dashboarda kayit etmek icin
+./node_modules/.bin/cypress run --record --key xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+
+Projedeki her hangi bir testi calistirip dashboarda kayit etmek icin
+./node_modules/.bin/cypress run --spec cypress/integration/com.techproed/
+day01_login_test.js --record --key xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+
+*****************************************************************************
+
+integration dosyasindaki butun testleri calistirmak ici
+
+1) ./node_modules/.bin/cypress run --record --key 119300a5-3532-4f60-ad9f-52d585fea3f2
+
+2) npx cypress run --record --key 119300a5-3532-4f60-ad9f-52d585fea3f2
+
+
+
+Projedeki day01_login_test.js testi calistirip dashboarda kayit etmek icin
+
+1) ./node_modules/.bin/cypress run --spec cypress/integration/com.techproed/day01_login_test.js --record --key cbab1a9c-51c4-4762-b3be-f658a3855552
+
+2) npx cypress run --spec cypress/integration/com.techproed/day01_login_test.js --record --key cbab1a9c-51c4-4762-b3be-f658a3855552
+
+*****************************************************************************
+
+
+
+
+================================
+*****CYPRESS HTML REPORTS*****
+
+
+***Mocha-Awesome Reports!!!!!!
+
+INSTALLATION STEPS:
+1.
+LINK : https://www.npmjs.com/package/mochawesome
+COMMAND: npm install --save-dev mochawesome
+
+2.
+LINK : https://www.npmjs.com/package/mochawesome-merge
+COMMAND : npm install mochawesome-merge --save-dev
+
+3.
+LINK : https://www.npmjs.com/package/mochawesome-report-generator
+COMMAND : npm install -g mochawesome-report-generator
+--------------------
+NOTE:
+IF YOU HAVE PERMISSION ISSUE RUN THIS AND ENTER YOUR PASS:
+sudo chown -R $USER /usr/local/lib/node_modules
+-------------------
+
+4. Add mochawesome report configurations inside CYPRESS.JSON FILE
+
+{
+  "chromeWebSecurity": false,
+  "reporter": "mochawesome",
+    "reporterOptions": {
+      "reportDir": "cypress/reports",
+      "reportFilename": "report",
+      "overwrite": false,
+      "html": true,
+      "json": true,
+      "charts": true
+    },
+    "video": false
+}
+
+
+
+5. Termimalden run etme:
+./node_modules/.bin/cypress run --spec cypress/integration/com.techproed/day01_login_test.js
+./node_modules/.bin/cypress run -> runs and generates report for all tests
+
+
+
+6. Rapor dosyasi olusacak ve raporlar report.html ve report.json olarak olusacak
+
+***** RAPORLARI MERGE ETME  ******
+
+7. In package.json > scripts
+
+Add below to merge single reports and output.html to see all the reports as single file
+
+ "merge": "mochawesome-merge cypress/reports/*.json > cypress/reports/output.json",
+ "generate_mochawesome_report": "marge cypress/reports/output.json --reportDir ./ --inline"
+
+
+8. npm run merge
+   npm run generate_mochawesome_report
+
+   OUTPUT.HTML dosyasi olusturuldu.
+   output.html dosyasini ac ve butun raporlari birlestirilmis halde gor.
+
+
+
+
+
+04/08/2021
+
+https://paylinn.com/
+
+KOD 21
+
+/// <reference types="Cypress" />
+
+describe('Paylinn Bank', () => {
+
+    it('paylinn login test', () => {
+        //URL'e git
+        cy.visit('https://www.paylinn.com/')
+
+        //Sign In'e click
+        cy.contains('Sign In').click()
+        
+        //username gir
+        cy.get(':nth-child(1) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input').type('User')
+
+        //password gir
+        cy.get(':nth-child(2) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input').type('user')
+
+        //sign In butonuna tikla
+        cy.get('.MuiButton-label').click()
+
+        //giris yapildigini onayla
+        cy.get('.header__nav > :nth-child(1) > .header__lineOne').should('contain.text', 'Welcoem')
+
+    })
+})
+
+===============================================================================
+
+Fixtures dosyasindan data alma
+
+1. create a class
+day05_paylinn_login_with_fixture.js
+
+2. Fixtures dosyasini altında creds.json file olustur
+File name : creds.json
+
+{
+    "username":"User",
+    "password":"user"
+}
+
+===============================================================================
+
+
+KOD 22
+
+describe('Paylinn Bank', () => {
+
+    before(function(){
+        cy.fixture('creds').then(function(data){
+            this.data = data
+        })
+    })
+
+    it('paylinn login test', function(){
+        //URL'e git
+        cy.visit('https://www.paylinn.com/')
+
+        //Sign In'e click
+        cy.contains('Sign In').click()
+        
+        //username gir
+        cy.get(':nth-child(1) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input')
+        .type(this.data.username)
+
+        //username girildigini dogrula
+        //value attribute dogrulayacagiz
+        //<input aria-invalid="true" name="username" type="text" class="MuiInputBase-input MuiInput-input" value="">
+        //<input aria-invalid="false" name="username" type="text" class="MuiInputBase-input MuiInput-input" value="User">
+
+        cy.get(':nth-child(1) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input')
+        .should('have.attr', 'value', this.data.username)
+
+
+        //password gir
+        cy.get(':nth-child(2) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input')
+        .type(this.data.password)
+
+        //password girildigini dogrula
+        cy.get(':nth-child(2) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input')
+        .should('have.attr', 'value', this.data.password)
+
+        //sign In butonuna tikla
+        cy.get('.MuiButton-label').click()
+
+        //giris yapildigini onayla
+        cy.get('.header__nav > :nth-child(1) > .header__lineOne').should('contain.text', 'Welcome')
+
+        //giris yapildigini assert etme
+
+        cy.get('.header__nav')
+        .should('contain.text', 'Welcome')
+        .and('contain.text', 'React')
+        .and('contain.text', 'Logout')
+        .and('contain.text', this.data.username)
+    })
+})
+
+
+
+***PAGE OBJECT MODEL WITH CYPRESS
+-pom framework olusturmak icin kullanilir,
+-It is used for easy easy maintanance, easy flow, understandable objects
+-We create page object in a new package and differenct page class
+-POM is used to seperate the page objects from the test class so the test classes looks siple and more understandable
+
+STEPS:
+1. Create a package: pageObjectRepository
+2. Create 2 page classes :HomePage.js, LoginPage.js
+3. Create methods that returns the page objects 
+
+For example for HomePage.js we need to return Sign in link element
+
+
+KOD 23
+
+class HomePage {
+    getSigninLink(){
+        return cy.contains('Sign In')
+    }
+}
+export default HomePage
+
+
+
+KOD 24
+
+class LoginPage{
+    getUserNameBox(){
+        return cy.get(':nth-child(1) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input')
+    }
+
+    getPasswordBox(){
+        return cy.get(':nth-child(2) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input')
+    }
+
+    getLoginButton(){
+        return cy.get('.MuiButton-label')
+    }
+
+    getWelcomeText(){
+        return cy.get('.header__nav > :nth-child(1) > .header__lineOne')
+        
+    }
+
+    getNavbarHeader(){
+        return cy.get('.header__nav')
+    }
+}
+
+export default LoginPage
+
+
+KOD ?? : day08_POM_TEST.js
+
+
+
+import HomePage from '../pageObjectRespository/HomePage'
+import LoginPage from '../pageObjectRespository/LoginPage'
+
+describe('Paylinn Bank', () => {
+
+    before(function(){
+        cy.fixture('creds').then(function(data){
+            this.data = data
+        })
+    })
+
+    it('paylinn login test', function(){
+
+        //page object olusturma
+        const homePage = new HomePage()
+
+        //loginPage object olusturma
+        const loginPage = new LoginPage()
+
+        //URL'e git
+        cy.visit('https://www.paylinn.com/')
+
+        //Sign In'e click
+        homePage.getSigninLink().click()
+        
+        //username gir
+        loginPage.getUserNameBox().type(this.data.username)
+
+        //username girildigini dogrula
+        loginPage.getUserNameBox()
+        .should('have.attr', 'value', this.data.username)
+
+        //password gir
+        loginPage.getPasswordBox().type(this.data.password)
+
+        //password girildigini dogrula
+        loginPage.getPasswordBox().should('have.attr', 'value', this.data.password)
+
+        //sign In butonuna tikla
+        loginPage.getLoginButton().click()
+
+        //giris yapildigini onayla
+        loginPage.getWelcomeText().should('contain.text', 'Welcome')
+
+        //giris yapildigini assert etme
+        loginPage.getNavbarHeader()
+        .should('contain.text', 'Welcome')
+        .and('contain.text', 'React')
+        .and('contain.text', 'Logout')
+        .and('contain.text', this.data.username)
+    })
+})
+
+
+
+fixture -> creds.json
+
+{
+    "username":"User",
+    "password":"user",
+}
+
+
+*** Scripts ekleme ***
+npm run ...... => testleri terminalden run etmek icin kullanilir
+
+
+*****************************************************************************
+*****************************************************************************
+
+Bir dosyayi headless (browsersiz) run etmek icin:
+
+1) ./node_modules/.bin/cypress run --spec cypress/integration/com.techproed/day01_login_test.js
+
+2) npx cypress run --spec cypress/integration/com.techproed/day01_login_test.js
+
+3) ./node_modules/.bin/cypress run --spec cypress/integration/com.techproed/day01_login_test.js --browser chrome
+
+4) npx cypress run --spec cypress/integration/com.techproed/day01_login_test.js --browser chrome
+
+*****************************************************************************
+*****************************************************************************
+
+
+
+
+
+Tum testleri run etmek icin
+./node_modules/.bin/cypress run
+
+
+Run etmek icin kendi kodumuzu olusturma:
+
+STEPS:
+1.butun testleri run etmek icin script olustur
+package.json > scripts
+
+  "scripts": {
+    "test": "./node_modules/.bin/cypress run",
+    "merge": "mochawesome-merge cypress/reports/*.json > cypress/reports/output.json",
+    "generate_mochawesome_report": "marge cypress/reports/output.json --reportDir ./ --inline"
+  }
+
+yukaridaki koddaki
+
+    "test": "echo \"Error: no test specified\" && exit 1",
+
+bolumune
+
+ "test": "./node_modules/.bin/cypress run",
+
+ kodunu ekliyoruz.
+
+ [(./node_modules/.bin/cypress run) -> test] 
+
+
+boylece
+
+npm run test
+
+komutunu olusturmus olduk.
+
+( ./node_modules/.bin/cypress run )
+
+
+2. headed mode ekleme
+
+./node_modules/.bin/cypress run --headed
+
+
+"test-headed":"./node_modules/.bin/cypress run --headed"
+Bu kodu package.json -> scripts in icine ekliyoruz
+
+
+  "scripts": {
+    "test": "./node_modules/.bin/cypress run",
+    "test-headed":"./node_modules/.bin/cypress run --headed",
+    "merge": "mochawesome-merge cypress/reports/*.json > cypress/reports/output.json",
+    "generate_mochawesome_report": "marge cypress/reports/output.json --reportDir ./ --inline"
+  }
+
+
+boylece
+
+npm run test -headed
+kodunu olusturmus olduk
+
+
+3. browser ekleme
+
+./node_modules/.bin/cypress run --headed --browser=chrome
+
+
+"test-chrome":"./node_modules/.bin/cypress run --headed --browser=chrome"
+
+Bu kodu package.json -> scripts in icine ekliyoruz
+
+  "scripts": {
+    "test": "./node_modules/.bin/cypress run",
+    "test-headed":"./node_modules/.bin/cypress run --headed",
+    "test-chrome":"./node_modules/.bin/cypress run --headed --browser=chrome",
+    "merge": "mochawesome-merge cypress/reports/*.json > cypress/reports/output.json",
+    "generate_mochawesome_report": "marge cypress/reports/output.json --reportDir ./ --inline"
+  }
+
+
+Boylece
+npm run test-chrome
+kodunu olusturmus olduk
+
+4. dashboard run kodu ekleme
+
+
+./node_modules/.bin/cypress run --record --key 992f69ba-ef7c-407b-a762-143ab7d21401
+
+Add script:
+"test-dashboard":"./node_modules/.bin/cypress run --record --key 992f69ba-ef7c-407b-a762-143ab7d21401"
+
+
+Bu kodu package.json -> scripts in icine ekliyoruz
+
+  "scripts": {
+    "test": "./node_modules/.bin/cypress run",
+    "test-headed":"./node_modules/.bin/cypress run --headed",
+    "test-chrome":"./node_modules/.bin/cypress run --headed --browser=chrome",
+    "test-dashboard":"./node_modules/.bin/cypress run --record --key 992f69ba-ef7c-407b-a762-143ab7d21401",
+    "merge": "mochawesome-merge cypress/reports/*.json > cypress/reports/output.json",
+    "generate_mochawesome_report": "marge cypress/reports/output.json --reportDir ./ --inline"
+  }
+
+
+
+
+Boylece
+npm run test-dashboard
+kodunu olusturmus olduk
+
+============
+
+********HATA VEREN TESTLERİ YENNIDEN RUN ETME **************
+https://docs.cypress.io/guides/guides/test-retries
+
+
+Asagidaki kodu CYPRESS.JSON dosyasina ekle
+
+
+"retries": {
+    "runMode": 1,
+    "openMode": 0
+}
+
+runMode -> deneme sayisi
+openMode -> yeniden deneme sayisi
+
+Integration dosyasinin icinde smoke-test dosyasi olustur.
+asagidaki 2 dosyayi smoke-test icine surukle 
+day01_login_test
+day05_paylinn_login -> hata vermesi icin welcome i yanlis yaz
+
+testi calistirdigimizda, hata veren testi 2 defa deneyecek
+
+RUN:
+./node_modules/.bin/cypress run --spec cypress/integration/smoke-test/*.js */
+
+
+*** RUNNING MULTIPLE SPEC FILES:
+Way1: Create a folder and run all test inside that folder
+For example, we create smoke-test package
+And added 
+day01_login_test
+day05_paylinn_login -> failed this on purpose
+And run 
+./node_modules/.bin/cypress run --spec cypress/integration/smoke-test/*.js */
+This commends run both of the spec file
+
+
+Way2:
+https://docs.cypress.io/guides/guides/command-line#cypress-run
+
+cypress run --spec "cypress/integration/examples/actions.spec.js,cypress/integration/examples/files.spec.js"
+
+
+RUN BELOW COMMAND TO RUN ONLY SPECIFIED SPEC FILES:
+./node_modules/.bin/cypress run --spec "cypress/integration/com.techproed/day01_launch_browser.js,cypress/integration/com.techproed/day02_checkbox.js"
+./node_modules/.bin/cypress run --spec "cypress/integration/com.techproed/day01_launch_browser.js,cypress/integration/smoke-test/day01_login_test.js"
+
+
+
+
+
+***IntelliSense
+Yazilacak kodlari otomatik tamamlama
+
+https://docs.cypress.io/guides/tooling/IDE-integration#Writing-Tests
+
+WAY1: 
+
+/// <reference types="Cypress" />
+
+WAY2:
+support klasorunun icinde jscongig.json dosyasi olustur
+
+{
+  "include": ["./node_modules/cypress", "cypress/**/*.js"]
+}
+
+bu kodu dosyanin icine yaz
+
+
+
+
+CUCUMBER
+
+
+
+
+1. Masaustunde cypress_cucumber_framework klasoru olustur
+
+2. VSCode ac dosyai drag and drop yap
+
+3. Cypress yukle
+*npm init -y  
+*npm install --save-dev cypress
+--------------------------
+4.cucumber dependencies ekle
+https://github.com/TheBrainFamily/cypress-cucumber-preprocessor
+
+*npm install --save-dev cypress-cucumber-preprocessor
+
+VSCode da cypress klasoru olusturmak icin
+
+npx cypress open -> terminale yaz
+
+
+
+Cypress Configuration
+
+5. In cypress/plugins/index.js icerisine asagidaki kodu ekle
+
+const cucumber = require('cypress-cucumber-preprocessor').default
+module.exports = (on, config) => {
+  on('file:preprocessor', cucumber())
+}
+
+6. Asagidaki kodu cypress.json dosyasina ekle
+
+{
+  "testFiles": "**/*.feature"
+}
+
+Bu komut .feature dosyalarinin calisabilir yapar
+
+
+7. Asagidaki kodu package.json dosyasina ekle
+
+"cypress-cucumber-preprocessor": {
+  "nonGlobalStepDefinitions": true
+}
+
+KURULUM TAMAMLANDI
+
+** ilk feature dosyasini olusturma:
+Create a ff: paylinn_login.feature
+
+Tanimazsa extension kismidan
+Cucumber (Gherkin) Full Support --> Kur
+
+
+
+
+
+06/08/2021
+
+KOD 24: paylinn_login.fuature
+
+Feature: Login Test
+    Scenario: TC01_login
+    Given url git
+    And login tikla
+    And username ve password gir
+    And login butonuna tikla
+    And giris yapildigini onayla
+
+****ilk step definition olusturma
+
+step definition klasoru olustur
+Klasor ismi feature file ismi ile ayni olmali
+step definition file name farkli olabilir different(.js)
+
+Klasör olustur : paylinn_login
+.js file dosyasi olustur: paylinn_login.js(veya istsdiginiz isimde)
+
+
+https://github.com/TheBrainFamily/cypress-cucumber-preprocessor
+adresinden asagidaki kodu kopyala olusturdugunuz dosyanin icine yapistir.
+
+import { Given } from "cypress-cucumber-preprocessor/steps";
+
+const url = 'https://google.com'
+Given('I open Google page', () => {
+  cy.visit(url)
+})
+
+
+
+
+
+KOD 25: paylinn_login.js
+
+iimport { Given, And, When, Then } from "cypress-cucumber-preprocessor/steps";
+
+Given('url git', () => {
+    cy.visit('https://www.paylinn.com/')
+})
+
+Given('login tikla', () => {
+    cy.get('[href="/login"] > .header__option > .header__lineTwo').click()
+
+})
+
+Given('username ve password gir', () => {
+    cy.get(':nth-child(1) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input')
+    .type('User')
+
+    cy.get(':nth-child(2) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input')
+    .type('user')
+
+})
+
+Given('login butonuna tikla', () => {
+    cy.get('.MuiButton-label').click()
+
+})
+
+Given('giris yapildigini onayla', () => {
+    cy.get('.header__nav')
+    .should('contain.text', 'Welcome')
+
+})
+
+
+
+
+
+https://cucumber.io/
+
+https://cucumber.io/docs/gherkin/reference/
+
+
+
+  ***** SCENARIO OUTLINE ***
+
+
+
+KOD 26: scenario_outline-test.feature
+
+Feature: Baskentler
+Scenario Outline: baskentleri arama
+Given url git
+Given kullanici arama yapacak "<world capitals>"
+Given arama yapildigini kontrol edecek "<world capitals>"
+
+Examples:
+    | world capitals |
+    | london  |
+    | paris  |
+    | madrid  |
+    | vienna  |
+
+
+
+scenario_outline_test klasorunun icerisinde google_search.js olusur
+--------
+
+
+KOD 27
+
+import { Given, And, When, Then } from "cypress-cucumber-preprocessor/steps";
+
+Given("url git", () => {
+    cy.visit("https://www.google.com");
+})
+
+Given("kullanici arama yapacak {string}", (capitals) => {
+    cy.get(".gLFyf").type(capitals);
+    cy.get(".FPdoLc > center > .gNO89b").click()
+})
+
+  Given("arama yapildigini kontrol edecek {string}", (capitals) => {
+     cy.title().should('include', capitals) 
+
+})
+
+
+
+
+***** DATA TABLES ****
+
+
+KOD 28
+
+Feature: login maneger
+
+@manager_id
+Scenario: manager_id
+Given url git
+Given datalari kullanarak sayfata gir
+|username|password|
+|manager|Manager1!|
+Given login butonuna tikla
+Then sayfaya girildigini onayla
+
+@manager_id2 @smoke
+Scenario: manager_id2
+Given url git
+Given datalari kullanarak sayfata gir
+|username|password|
+|manager2|Manager2!|
+Given login butonuna tikla
+Then sayfaya girildigini onayla
+
+
+
+
+--------------------
+Craete a folder : data_tables_test
+
+
+Create a js file in that folder : login_test.js
+--------------
+
+
+KOD 29
+
+import { Given, And, When, Then } from "cypress-cucumber-preprocessor/steps";
+
+Given('url git', () => {
+    cy.visit('https://qa-environment.koalaresorthotels.com/Account/Logon/')
+})
+
+Given('datalari kullanarak sayfata gir', (dataTable) => {
+    cy.get('#UserName').type(dataTable.rawTable[1][0])
+    cy.get('#Password').type(dataTable.rawTable[1][1])
+
+    //List<String> loginData = credentials.row(0)
+    //loginPage.username.sendKeys(loginData.get(0)) in Selenim
+})
+
+Given('login butonuna tikla', () => {
+    cy.get('#btnSubmit').click()
+})
+
+Given('sayfaya girildigini onayla', () => {
+    cy.get('.username').should('contain.text', 'manager')
+})
+
+
+
+*****Cucumber Tags********
+Tags are used to controll the test flow
+run specific scenarios 
+skip specific scenarios
+
+Documentation note:
+./node_modules/.bin/cypress-tags run -e TAGS='not @foo and (@bar or @zap)'
+
+TAGS='    ' yazdigimiz testleri calıstirir. feature dosyalarınde testlere
+yag olusturuyoruz.
+
+
+./node_modules/.bin/cypress-tags run -e TAGS='@manager_id'
+
+Skip etme:
+@manager_id tag haric butum feature dosyalarini run et.
+./node_modules/.bin/cypress-tags run -e TAGS='not @manager_id'
+
+===========================================
+
+NOTES:
+cypress.json file, video katdetmemsi ve bazi bekleme surelerini ekliyoruz.
+
+default timeout 4 saniyedir.
+{
+    
+    "chromeWebSecurity": false,
+    "defaultCommandTimeout":6000,
+    "pageLoadTimeout":6000,
+    "execTimeout":6000,
+    "video": false,   
+    "testFiles": "**/*.feature"
+}
+========================
+
+@smoke tag ekliyoruz scenarios ya
+@smoke tag olan testleri calistirmasi icin
+
+./node_modules/.bin/cypress-tags run -e TAGS='@smoke'
+
+
+
+
+
+CYPRESS INTERVIEW SORULARI
+
+1) Cypres hangi OS destekler?
+macOS, Linux, and Windows
+
+2) Cypress hangi browserlari destekler?
+safari haric bir cogunu
+
+3) Cypres'te browser ile test yapmak icin hangi komut kullanilir?
+cypress run --headed
+
+4) Cypress'in avantajlari nelerdir?
+
+Real-time reloads
+Debuggability
+Automatic waiting
+OpenSource Tool
+Fast response time
+Active community support
+Plugin ecosystem
+
+5) Cypress'in Seleniumdan en belirgin farklari nelerdir?
+Cypress runner, browserda calisir, daha hizlidir.......
+
+=====================================================================
+
+
+KOD: day09_XHR1.js
+
+describe('XHR - XML, HTTP, Request', () => {
+    //XHR, JavaScript ile sunulmus bir API
+    //Web sitesini es zamanli olarak arka planda calisan olaylari takip eder.
+
+    const requestUrl = "https://jsonplaceholder.cypress.io/comments"
+
+    it('XHR Example 1', () => {
+        cy.request(requestUrl).should((response) =>{
+            console.log(response)
+
+            assert.equal(response.status, 200)
+            expect(response.statusText).to.eq('OK')
+        })
+    })
+})
+=====================================================================
+
+
+KOD: day09_XHR2.js
+
+describe('XHR - XML, HTTP, Request', () => {
+    //XHR, JavaScript ile sunulmus bir API
+    //Web sitesini es zamanli olarak arka planda calisan olaylari takip eder.
+
+    const requestUrl = "https://jsonplaceholder.cypress.io/comments"
+
+    it('XHR Example 2', () => {
+        cy.request('POST', requestUrl, {
+            userId:501,
+            title: "Cypres cok kolay",
+            body: "JavaScript daha da kolay"
+        }).then((response) =>{
+            console.log(response)
+            expect(response.status).to.eq(201)
+            expect(response).property('body').to.contain({title: "Cypres cok kolay"})
+            expect(response.body).property('userId').to.be.a('number')
+        })        
+    })
+})
+=====================================================================
+
+
+KOD: day09_XHR3.js
+
+describe('XHR - XML, HTTP, Request', () => {
+
+    it('XHR Example 3', () => {
+        cy.visit('https://example.cypress.io/commands/waiting')
+
+        cy.intercept('GET', '**/comments/*').as('getComment')
+        //networku dinle
+        //as -> degisken atiyor. daha sonra @ ile kullamilir
+        
+        cy.get('.network-btn').click()
+
+        cy.wait('@getComment').its('response').then((response) => {
+            console.log(response)
+
+            assert.equal(response.statusCode, 200, 'Status Code Control')
+        })
+    })
+})
