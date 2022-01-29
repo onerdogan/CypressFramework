@@ -1,3 +1,5 @@
+/// <reference types="Cypress" />
+
 describe('Paylinn bank',()=>{
 
     it('paylinn login test', () => {

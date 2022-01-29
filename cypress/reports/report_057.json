@@ -1,0 +1,107 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2022-01-26T11:48:58.056Z",
+    "end": "2022-01-26T11:49:10.827Z",
+    "duration": 12771,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "dd6af5b2-356f-42d0-8be2-8ff82fdea136",
+      "title": "",
+      "fullFile": "cypress/integration/com.techproed/smokeTest/day07_paylinn_login.js",
+      "file": "cypress/integration/com.techproed/smokeTest/day07_paylinn_login.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "f0697e15-3a5c-419a-8e89-a965d6e502e1",
+          "title": "Paylinn bank",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "paylinn login test",
+              "fullTitle": "Paylinn bank paylinn login test",
+              "timedOut": null,
+              "duration": 10508,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//URL'e git\ncy.visit('https://www.paylinn.com/'); //Sign In'e click\ncy.contains('Sign In').click(); //username gir\ncy.get(':nth-child(1) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input').type('User'); //password gir\ncy.get(':nth-child(2) > .MuiFormControl-root > .MuiInputBase-root > .MuiInputBase-input').type('user'); //sign In butonuna tikla\ncy.get('.MuiButton-label').click(); //giris yapildigini onayla\ncy.get('.header__nav > :nth-child(1) > .header__lineOne').should('contain.text', 'Welcome');",
+              "err": {},
+              "uuid": "fb6a2794-bf3c-4100-bada-192e1b88862d",
+              "parentUUID": "f0697e15-3a5c-419a-8e89-a965d6e502e1",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "fb6a2794-bf3c-4100-bada-192e1b88862d"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 10508,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "report",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.0.1"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "reportFilename": "report",
+        "overwrite": false,
+        "html": true,
+        "json": true,
+        "charts": true
+      },
+      "version": "6.0.1"
+    }
+  }
+}
